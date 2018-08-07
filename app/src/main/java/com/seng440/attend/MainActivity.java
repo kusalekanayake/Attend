@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermissions();
+    }
+
+    public void checkStudentButton(android.view.View view) {
+        Log.d("Test Student Button", "testing");
     }
 
     private void checkPermissions() {
