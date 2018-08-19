@@ -1,6 +1,7 @@
 package com.seng440.attend;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Looper;
@@ -28,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkStudentButton(android.view.View view) {
         Log.d("Test Student Button", "testing");
+        // TODO Auto-generated method stub
+        Intent i = new Intent(getApplicationContext(),NearbyActivity.class);
+        startActivity(i);
+//        setContentView(R.layout.activity_nearby);
     }
 
     private void checkPermissions() {
