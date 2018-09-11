@@ -2,34 +2,36 @@ package com.seng440.attend;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.connection.AdvertisingOptions;
-import com.google.android.gms.nearby.connection.ConnectionInfo;
-import com.google.android.gms.nearby.connection.ConnectionLifecycleCallback;
-import com.google.android.gms.nearby.connection.ConnectionResolution;
-import com.google.android.gms.nearby.connection.ConnectionsStatusCodes;
-import com.google.android.gms.nearby.connection.DiscoveryOptions;
-import com.google.android.gms.nearby.connection.EndpointDiscoveryCallback;
-import com.google.android.gms.nearby.connection.PayloadCallback;
-import com.google.android.gms.nearby.connection.Strategy;
+import com.google.android.gms.nearby.messages.BleSignal;
+import com.google.android.gms.nearby.messages.Distance;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
+import com.google.android.gms.nearby.messages.NearbyMessagesStatusCodes;
 
 public class NearbyActivity extends AppCompatActivity {
 
-    EndpointDiscoveryCallback mEndpointDiscoveryCallback;
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    int count = 0;
     String advertiserEndpointId;
-    PayloadCallback mPayloadCallback;
+    private GoogleApiClient mGoogleApiClient;
 
     Message mMessage;
-    MessageListener mMessageListener;
+//    MessageListener mMessageListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +60,7 @@ public class NearbyActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        Nearby.getMessagesClient(this).publish(mMessage);
-        Nearby.getMessagesClient(this).subscribe(mMessageListener);
+
 
     }
 
@@ -72,57 +73,72 @@ public class NearbyActivity extends AppCompatActivity {
 
 
     public void startAdvertising(android.view.View view) {
-        Nearby.getConnectionsClient(this)
-            .startAdvertising(
-                /* endpointName= */ "Device A",
-                /* serviceId= */ "com.seng440.attend",
-                mConnectionLifecycleCallback,
-                new AdvertisingOptions(Strategy.P2P_CLUSTER));
+
     }
 
     public void startConnecting(android.view.View view) {
-
-        Nearby.getConnectionsClient(this)
-                .requestConnection(
-                        /* endpointName= */ "Device B",
-                        advertiserEndpointId,
-                        mConnectionLifecycleCallback);
+        Nearby.getMessagesClient(this).subscribe(mMessageListener);
+        Nearby.getMessagesClient(this).publish(mMessage);
+//        Nearby.getMessagesClient();
     }
 
     public void startSendingMessage(android.view.View view) {
+        count++;
+        mMessage = new Message(("Hello World - " + count).getBytes());
+        Nearby.getMessagesClient(this).publish(mMessage);
 
     }
-    private final ConnectionLifecycleCallback mConnectionLifecycleCallback =
-            new ConnectionLifecycleCallback() {
-                @Override
-                public void onConnectionInitiated(String endpointId, ConnectionInfo connectionInfo) {
-                    // Automatically accept the connection on both sides.
-                    Nearby.getConnectionsClient(getApplicationContext()).acceptConnection(endpointId, mPayloadCallback);
-                }
 
-                @Override
-                public void onConnectionResult(String endpointId, ConnectionResolution result) {
-                    switch (result.getStatus().getStatusCode()) {
-                        case ConnectionsStatusCodes.STATUS_OK:
-                            // We're connected! Can now start sending and receiving data.
-                            break;
-                        case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
-                            // The connection was rejected by one or both sides.
-                            break;
-                        default:
-                            // The connection was broken before it was accepted.
-                            break;
-                    }
-                }
+    MessageListener mMessageListener = new MessageListener() {
+        /**
+         * Called when a message is discovered nearby.
+         */
+        @Override
+        public void onFound(final Message message) {
 
-                @Override
-                public void onDisconnected(String endpointId) {
-                    // We've been disconnected from this endpoint. No more data can be
-                    // sent or received.
-                }
-            };
 
-    public ConnectionLifecycleCallback getmConnectionLifecycleCallback() {
-        return mConnectionLifecycleCallback;
-    }
+            TextView textElement;
+            textElement = (TextView)findViewById(R.id.textView3);
+            textElement.setText(message.toString());
+
+            Log.i(TAG, "Found message: " + message);
+        }
+
+        /**
+         * Called when the Bluetooth Low Energy (BLE) signal associated with a message changes.
+         *
+         * This is currently only called for BLE beacon messages.
+         *
+         * For example, this is called when we see the first BLE advertisement
+         * frame associated with a message; or when we see subsequent frames with
+         * significantly different received signal strength indicator (RSSI)
+         * readings.
+         *
+         * For more information, see the MessageListener Javadocs.
+         */
+        @Override
+        public void onBleSignalChanged(final Message message, final BleSignal bleSignal) {
+            Log.i(TAG, "Message: " + message + " has new BLE signal information: " + bleSignal);
+        }
+
+        /**
+         * Called when Nearby's estimate of the distance to a message changes.
+         *
+         * This is currently only called for BLE beacon messages.
+         *
+         * For more information, see the MessageListener Javadocs.
+         */
+        @Override
+        public void onDistanceChanged(final Message message, final Distance distance) {
+            Log.i(TAG, "Distance changed, message: " + message + ", new distance: " + distance);
+        }
+
+        /**
+         * Called when a message is no longer detectable nearby.
+         */
+        @Override
+        public void onLost(final Message message) {
+            Log.i(TAG, "Lost message: " + message);
+        }
+    };
 }
