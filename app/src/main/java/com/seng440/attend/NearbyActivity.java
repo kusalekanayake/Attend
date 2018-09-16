@@ -1,37 +1,26 @@
 package com.seng440.attend;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.messages.BleSignal;
-import com.google.android.gms.nearby.messages.Distance;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
-import com.google.android.gms.nearby.messages.NearbyMessagesStatusCodes;
+import com.google.android.gms.nearby.messages.Strategy;
+
 
 public class NearbyActivity extends AppCompatActivity {
 
-
-    private static final String TAG = MainActivity.class.getSimpleName();
-
-    int count = 0;
     String advertiserEndpointId;
     private GoogleApiClient mGoogleApiClient;
 
+    private static final Strategy PUB_SUB_STRATEGY = new Strategy.Builder()
+            .setTtlSeconds(180).build();
     Message mMessage;
-//    MessageListener mMessageListener;
+    MessageListener mMessageListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +29,8 @@ public class NearbyActivity extends AppCompatActivity {
             @Override
             public void onFound(Message message) {
                 Log.d("FOUND MESSAGE", "Found message: " + new String(message.getContent()));
+                ((TextView)findViewById(R.id.textView2)).setText(message.toString());
+
             }
 
             @Override
@@ -57,10 +48,23 @@ public class NearbyActivity extends AppCompatActivity {
 //            }
 //        });
     }
+
+    private void buildGoogleApiClient() {
+        if (mGoogleApiClient != null) {
+            return;
+        }
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Nearby.MESSAGES_API)
+                .addConnectionCallbacks((GoogleApiClient.ConnectionCallbacks) this)
+                .enableAutoManage(this, (GoogleApiClient.OnConnectionFailedListener) this)
+                .build();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-
+        Nearby.getMessagesClient(this).publish(mMessage);
+        Nearby.getMessagesClient(this).subscribe(mMessageListener);
 
     }
 
@@ -73,72 +77,19 @@ public class NearbyActivity extends AppCompatActivity {
 
 
     public void startAdvertising(android.view.View view) {
-
+        ((TextView)findViewById(R.id.textView3)).setText("Advertising...");
     }
 
     public void startConnecting(android.view.View view) {
+        ((TextView)findViewById(R.id.textView3)).setText("Connecting...");
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
-        Nearby.getMessagesClient(this).publish(mMessage);
-//        Nearby.getMessagesClient();
+
     }
 
     public void startSendingMessage(android.view.View view) {
-        count++;
-        mMessage = new Message(("Hello World - " + count).getBytes());
+        ((TextView)findViewById(R.id.textView3)).setText("Sending message...");
         Nearby.getMessagesClient(this).publish(mMessage);
 
     }
 
-    MessageListener mMessageListener = new MessageListener() {
-        /**
-         * Called when a message is discovered nearby.
-         */
-        @Override
-        public void onFound(final Message message) {
-
-
-            TextView textElement;
-            textElement = (TextView)findViewById(R.id.textView3);
-            textElement.setText(message.toString());
-
-            Log.i(TAG, "Found message: " + message);
-        }
-
-        /**
-         * Called when the Bluetooth Low Energy (BLE) signal associated with a message changes.
-         *
-         * This is currently only called for BLE beacon messages.
-         *
-         * For example, this is called when we see the first BLE advertisement
-         * frame associated with a message; or when we see subsequent frames with
-         * significantly different received signal strength indicator (RSSI)
-         * readings.
-         *
-         * For more information, see the MessageListener Javadocs.
-         */
-        @Override
-        public void onBleSignalChanged(final Message message, final BleSignal bleSignal) {
-            Log.i(TAG, "Message: " + message + " has new BLE signal information: " + bleSignal);
-        }
-
-        /**
-         * Called when Nearby's estimate of the distance to a message changes.
-         *
-         * This is currently only called for BLE beacon messages.
-         *
-         * For more information, see the MessageListener Javadocs.
-         */
-        @Override
-        public void onDistanceChanged(final Message message, final Distance distance) {
-            Log.i(TAG, "Distance changed, message: " + message + ", new distance: " + distance);
-        }
-
-        /**
-         * Called when a message is no longer detectable nearby.
-         */
-        @Override
-        public void onLost(final Message message) {
-            Log.i(TAG, "Lost message: " + message);
-        }
-    };
 }
