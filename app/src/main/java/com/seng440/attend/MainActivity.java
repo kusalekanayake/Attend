@@ -14,11 +14,12 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
-    private int MY_PERMISSIONS_REQUEST_COARSE_LOCATION;
+    //private int MY_PERMISSIONS_REQUEST_COARSE_LOCATION;
     private int MY_PERMISSIONS_REQUEST_BLUETOOTH;
     private int MY_PERMISSIONS_REQUEST_BLUETOOTH_ADMIN;
     private int MY_PERMISSIONS_REQUEST_WIFI_STATE;
     private int MY_PERMISSIONS_REQUEST_WIFI_CHANGE;
+    private int MY_PERMISSIONS_REQUEST_FINE_LOCATION;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +35,32 @@ public class MainActivity extends AppCompatActivity {
         startActivity(i);
 //        setContentView(R.layout.activity_nearby);
     }
+    public void checkTeacherButton(android.view.View view) {
+        Intent i = new Intent(getApplicationContext(), LocationActivity.class);
+        startActivity(i);
+    }
 
     private void checkPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+//                        ActivityCompat.requestPermissions(this,
+//                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+//                                MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
+//                    }
+//        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                        ActivityCompat.requestPermissions(this,
-                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                                MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
-                    }
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+            }
         }
+
+
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
                 != PackageManager.PERMISSION_GRANTED) {

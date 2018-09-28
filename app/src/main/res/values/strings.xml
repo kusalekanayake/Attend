@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Attend</string>
     <string name="title_activity_nearby">NearbyActivity</string>
+    <string name="title_activity_location">LocationActivity</string>
 </resources>
