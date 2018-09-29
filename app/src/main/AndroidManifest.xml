@@ -20,6 +20,9 @@
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
             android:value="AIzaSyAgJDXXcqzT6pcqC-T7EaXh7PikGWwQvNw" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAgJDXXcqzT6pcqC-T7EaXh7PikGWwQvNw" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -39,7 +42,10 @@
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MapsActivity2"
+            android:label="@string/title_activity_maps2"></activity>
     </application>
 
 </manifest>

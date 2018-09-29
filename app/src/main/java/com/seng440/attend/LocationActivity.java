@@ -79,7 +79,7 @@ public class LocationActivity extends AppCompatActivity {
                 });
     }
     public void checkMapButton(android.view.View view) {
-        Intent i = new Intent(getApplicationContext(), MapActivity.class);
+        Intent i = new Intent(getApplicationContext(), MapsActivity2.class);
         startActivity(i);
     }
 

@@ -3,4 +3,5 @@
     <string name="title_activity_nearby">NearbyActivity</string>
     <string name="title_activity_location">LocationActivity</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_maps2">Map</string>
 </resources>
