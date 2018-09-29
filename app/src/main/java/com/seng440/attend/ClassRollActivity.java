@@ -1,46 +1,55 @@
 package com.seng440.attend;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 
+
 public class ClassRollActivity extends AppCompatActivity {
 
     int count = 0;
-    String advertiserEndpointId;
-    private GoogleApiClient mGoogleApiClient;
-
-
+    String androidId;
+    String nameText;
+    String classText;
     Message mMessage;
+    Course course;
     MessageListener mMessageListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_class_roll);
+        course = new Course("SENG440");
+        setContentView(R.layout.activity_nearby);
+        androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
                 Log.d("FOUND MESSAGE", "Found message: " + new String(message.getContent()));
                 ((TextView)findViewById(R.id.textView2)).setText(new String(message.getContent()));
                 ((ImageView)findViewById(R.id.imageView2)).setImageResource(R.drawable.green);
+                String messageString = new String(message.getContent());
+                String student = messageString.split(",")[0];
+                String id = messageString.split(",")[2];
+                course.addStudent(new Student(student, id));
+                ((TextView)findViewById(R.id.textView2)).setText(course.getStudents());
             }
 
             @Override
             public void onLost(Message message) {
                 Log.d("LOST MESSAGE", "Lost sight of message: " + new String(message.getContent()));
             }
+
         };
-        String nameText = getIntent().getStringExtra("NAME");
-        String classText = getIntent().getStringExtra("CLASS");
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\n count: "+ count).getBytes());
+
+        nameText = getIntent().getStringExtra("NAME");
+        classText = getIntent().getStringExtra("CLASS");
+        mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
     }
 
@@ -48,9 +57,7 @@ public class ClassRollActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        String nameText = getIntent().getStringExtra("NAME");
-        String classText = getIntent().getStringExtra("CLASS");
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count).getBytes());
+        mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).publish(mMessage);
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
@@ -71,9 +78,7 @@ public class ClassRollActivity extends AppCompatActivity {
 
     public void startConnecting(android.view.View view) {
         ((TextView)findViewById(R.id.textView3)).setText("Connecting...");
-        String nameText = getIntent().getStringExtra("NAME");
-        String classText = getIntent().getStringExtra("CLASS");
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count).getBytes());
+        mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
 
@@ -81,11 +86,10 @@ public class ClassRollActivity extends AppCompatActivity {
 
     public void startSendingMessage(android.view.View view) {
         ((TextView)findViewById(R.id.textView3)).setText("Sending message...");
-        String nameText = getIntent().getStringExtra("NAME");
-        String classText = getIntent().getStringExtra("CLASS");
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count).getBytes());
+        mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).publish(mMessage);
 
     }
+
 }

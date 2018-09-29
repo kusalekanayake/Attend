@@ -40,7 +40,7 @@ public class NearbyActivity extends AppCompatActivity {
         };
         nameText = getIntent().getStringExtra("NAME");
         classText = getIntent().getStringExtra("CLASS");
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count + "\nid: " + androidId.toString()).getBytes());
+        mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
     }
 
@@ -48,7 +48,7 @@ public class NearbyActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count + "\nid: " + androidId.toString()).getBytes());
+        mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).publish(mMessage);
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
@@ -69,7 +69,7 @@ public class NearbyActivity extends AppCompatActivity {
 
     public void startConnecting(android.view.View view) {
         ((TextView)findViewById(R.id.textView3)).setText("Connecting...");
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count + "\nid: " + androidId.toString()).getBytes());
+        mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
 
@@ -77,7 +77,7 @@ public class NearbyActivity extends AppCompatActivity {
 
     public void startSendingMessage(android.view.View view) {
         ((TextView)findViewById(R.id.textView3)).setText("Sending message...");
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count + "\nid: " + androidId.toString()).getBytes());
+        mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).publish(mMessage);
 
