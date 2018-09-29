@@ -2,6 +2,7 @@ package com.seng440.attend;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -76,6 +77,10 @@ public class LocationActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+    public void checkMapButton(android.view.View view) {
+        Intent i = new Intent(getApplicationContext(), MapActivity.class);
+        startActivity(i);
     }
 
 }
