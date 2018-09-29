@@ -1,30 +1,30 @@
 package com.seng440.attend;
 
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 
-
-public class NearbyActivity extends AppCompatActivity {
+public class ClassRollActivity extends AppCompatActivity {
 
     int count = 0;
-    String androidId;
-    String nameText;
-    String classText;
+    String advertiserEndpointId;
+    private GoogleApiClient mGoogleApiClient;
+
+
     Message mMessage;
     MessageListener mMessageListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nearby);
-        androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        setContentView(R.layout.activity_class_roll);
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
@@ -38,9 +38,9 @@ public class NearbyActivity extends AppCompatActivity {
                 Log.d("LOST MESSAGE", "Lost sight of message: " + new String(message.getContent()));
             }
         };
-        nameText = getIntent().getStringExtra("NAME");
-        classText = getIntent().getStringExtra("CLASS");
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count + "\nid: " + androidId.toString()).getBytes());
+        String nameText = getIntent().getStringExtra("NAME");
+        String classText = getIntent().getStringExtra("CLASS");
+        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\n count: "+ count).getBytes());
         count += 1;
     }
 
@@ -48,7 +48,9 @@ public class NearbyActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count + "\nid: " + androidId.toString()).getBytes());
+        String nameText = getIntent().getStringExtra("NAME");
+        String classText = getIntent().getStringExtra("CLASS");
+        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).publish(mMessage);
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
@@ -69,7 +71,9 @@ public class NearbyActivity extends AppCompatActivity {
 
     public void startConnecting(android.view.View view) {
         ((TextView)findViewById(R.id.textView3)).setText("Connecting...");
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count + "\nid: " + androidId.toString()).getBytes());
+        String nameText = getIntent().getStringExtra("NAME");
+        String classText = getIntent().getStringExtra("CLASS");
+        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
 
@@ -77,10 +81,11 @@ public class NearbyActivity extends AppCompatActivity {
 
     public void startSendingMessage(android.view.View view) {
         ((TextView)findViewById(R.id.textView3)).setText("Sending message...");
-        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count + "\nid: " + androidId.toString()).getBytes());
+        String nameText = getIntent().getStringExtra("NAME");
+        String classText = getIntent().getStringExtra("CLASS");
+        mMessage = new Message((nameText.toString() + " from " + classText.toString() + "\ncount: "+ count).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).publish(mMessage);
 
     }
-
 }
