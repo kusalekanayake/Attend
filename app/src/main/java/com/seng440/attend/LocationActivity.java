@@ -1,17 +1,14 @@
 package com.seng440.attend;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,6 +24,7 @@ public class LocationActivity extends AppCompatActivity {
     private TextView myLatitude;
     private TextView myLongitude;
     private LocationRequest mLocationRequest;
+    private BottomNavigationView mTeacherNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +34,35 @@ public class LocationActivity extends AppCompatActivity {
         myLongitude = findViewById(R.id.LongitudeText);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        mTeacherNav = (BottomNavigationView) findViewById(R.id.teacher_nav);
+        mTeacherNav.setSelectedItemId(R.id.nav_map);
+        mTeacherNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            Intent i;
+            String classText;
+            String nameText;
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_classes:
+                        return true;
+                    case R.id.nav_roll:
+                        i = new Intent(getApplicationContext(), ClassRollActivity.class);
+                        classText = "SENG440";
+                        i.putExtra("CLASS", classText);
+                        nameText = "Kusal";
+                        i.putExtra("NAME", nameText);
+                        finish();
+                        startActivity(i);
+                        return true;
+                    case R.id.nav_map:
+                        return true;
+                    default:
+                        return false;
+
+                }
+            }
+        });
     }
 
     protected void startLocationUpdates(){

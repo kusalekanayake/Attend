@@ -80,6 +80,7 @@ public class ClassRollActivity extends AppCompatActivity {
                         i = new Intent(getApplicationContext(), NearbyActivity.class);
                         classText = "SENG440";
                         i.putExtra("CLASS", classText);
+                        i.putExtra("STUDENTS", course.toString());
                         nameText = "Kusal";
                         i.putExtra("NAME", nameText);
                         finish();
@@ -90,6 +91,7 @@ public class ClassRollActivity extends AppCompatActivity {
                     case R.id.nav_map:
                         i = new Intent(getApplicationContext(), LocationActivity.class);
                         classText = "HI there";
+                        i.putExtra("STUDENTS", course.toString());
                         i.putExtra("CLASS", classText);
                         nameText = "hello";
                         i.putExtra("NAME", nameText);
@@ -103,6 +105,8 @@ public class ClassRollActivity extends AppCompatActivity {
             }
         });
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
+        new android.os.Handler().postDelayed(
+                () -> lookForStudents(), 500);
     }
 
     private void addNewStudentToTable(String student, String id) {
@@ -132,6 +136,9 @@ public class ClassRollActivity extends AppCompatActivity {
         respondToStudent(student, id);
     }
 
+    private void lookForStudents() {
+        Nearby.getMessagesClient(this).subscribe(mMessageListener);
+    }
 
     @Override
     public void onStart() {
@@ -152,7 +159,6 @@ public class ClassRollActivity extends AppCompatActivity {
     }
 
     public void exportClass(android.view.View view) {
-        Nearby.getMessagesClient(this).subscribe(mMessageListener);
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                 "mailto","abc@mail.com", null));
         emailIntent.putExtra(Intent.EXTRA_EMAIL, "address");

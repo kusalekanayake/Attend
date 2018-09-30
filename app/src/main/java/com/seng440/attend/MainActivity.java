@@ -19,13 +19,17 @@ public class MainActivity extends AppCompatActivity {
     private int MY_PERMISSIONS_REQUEST_WIFI_STATE;
     private int MY_PERMISSIONS_REQUEST_WIFI_CHANGE;
     private int MY_PERMISSIONS_REQUEST_FINE_LOCATION;
-
+    private String course;
+    private String studentName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermissions();
+        course = getIntent().getStringExtra("STUDENTS");
+        studentName = getIntent().getStringExtra("NAME");
+
     }
 
 
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkTeacherButton(android.view.View view) {
-        Intent i = new Intent(getApplicationContext(), LocationActivity.class);
+        Intent i = new Intent(getApplicationContext(), ClassRollActivity.class);
         String classText = ((TextView)findViewById(R.id.classText)).getText().toString();
         i.putExtra("CLASS", classText);
         String nameText = ((TextView)findViewById(R.id.nameText)).getText().toString();

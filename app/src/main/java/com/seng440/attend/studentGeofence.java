@@ -50,7 +50,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
         mGeofencingClient = new GeofencingClient(this);
 
         mTeacherNav = (BottomNavigationView) findViewById(R.id.student_nav);
-
+        mTeacherNav.setSelectedItemId(R.id.nav_student_map);
         mTeacherNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             Intent i;
             String classText;
