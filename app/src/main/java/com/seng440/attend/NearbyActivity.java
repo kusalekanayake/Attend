@@ -39,6 +39,9 @@ public class NearbyActivity extends AppCompatActivity {
     private Task<Location> loco;
 
     private BottomNavigationView mTeacherNav;
+    private String radius;
+    private String lat;
+    private String lon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,12 @@ public class NearbyActivity extends AppCompatActivity {
                     ((TextView) findViewById(R.id.textView3)).setText("Connected");
                     ((ImageView) findViewById(R.id.imageView2)).setImageResource(R.drawable.green);
                     loading = false;
+                } else if (messageText.split(",")[0].equals("GEOFENCE")) {
+                    radius = messageText.split(",")[1];
+                    lat = messageText.split(",")[2];
+                    lon = messageText.split(",")[3];
+
+
                 }
             }
 
@@ -99,10 +108,11 @@ public class NearbyActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_student_map:
                         i = new Intent(getApplicationContext(), studentGeofence.class);
-                        classText = "HI there";
-                        i.putExtra("CLASS", classText);
-                        nameText = "hello";
-                        i.putExtra("NAME", nameText);
+                        if(radius != null) {
+                            i.putExtra("RADIUS", String.valueOf(radius));
+                            i.putExtra("LAT", String.valueOf(lat));
+                            i.putExtra("LONG", String.valueOf(lon));
+                        }
                         finish();
                         startActivity(i);
                         return true;

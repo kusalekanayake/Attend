@@ -1,6 +1,7 @@
 package com.seng440.attend;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -176,6 +178,13 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),ClassRollActivity.class);
+
+                intent.putExtra("RADIUS", String.valueOf(radius));
+                intent.putExtra("LAT", String.valueOf(markerPos.latitude));
+                intent.putExtra("LONG", String.valueOf(markerPos.longitude));
+                finish();
+                startActivity(intent);
 //                Nearby.getMessagesClient(getApplicationContext()).subscribe(mMessageListener);
 //
 //                Log.d("SENDING MES", "SENDING MESSAGE");

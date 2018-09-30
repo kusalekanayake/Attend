@@ -45,6 +45,7 @@ public class ClassRollActivity extends AppCompatActivity {
     private FusedLocationProviderClient mFusedLocationClient;
     private Task<Location> loco;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +96,10 @@ public class ClassRollActivity extends AppCompatActivity {
 
         nameText = getIntent().getStringExtra("NAME");
         classText = getIntent().getStringExtra("CLASS");
+        if (nameText == null) {
+            nameText = "no course";
+            classText = "no course";
+        }
         mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
 
@@ -139,6 +144,7 @@ public class ClassRollActivity extends AppCompatActivity {
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
         new android.os.Handler().postDelayed(
                 () -> lookForStudents(), 500);
+        SendGeofence();
     }
 
     private void reAddStudents() {
@@ -211,6 +217,7 @@ public class ClassRollActivity extends AppCompatActivity {
     private void respondToStudent(String phoneId, String name) {
         mMessage = new Message((name + "," + phoneId + "," + course.getCourseName()).getBytes());
         Nearby.getMessagesClient(this).publish(mMessage);
+        SendGeofence();
     }
 
     public void exportClass(android.view.View view) {
@@ -247,6 +254,21 @@ public class ClassRollActivity extends AppCompatActivity {
         distance = Math.pow(distance, 2);
 
         return Math.sqrt(distance);
+    }
+
+    private void SendGeofence(){
+        String radius = getIntent().getStringExtra("RADIUS");
+        Log.d("SENGG", "About to send geofence");
+        if (radius != null) {
+            Log.d("SEND", "sent geofence");
+            String lat = getIntent().getStringExtra("LAT");
+            String lon = getIntent().getStringExtra("LONG");
+            mMessage = new Message(("GEOFENCE,"+ radius + "," + lat + "," + lon).getBytes());
+            Nearby.getMessagesClient(this).publish(mMessage);
+        } else {
+            Log.d("NOSEND", "didnt send geofence");
+
+        }
     }
 
 }

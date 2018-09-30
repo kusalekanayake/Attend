@@ -55,12 +55,16 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private LocationCallback mLocationCallback;
     private Circle posCircle;
     private MessageListener mMessageListener;
+    private float radius;
+    private LatLng fenceLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mFusedLocaitonClient = LocationServices.getFusedLocationProviderClient(this);
         setContentView(R.layout.activity_student_geofence);
+        getGeofence();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -146,9 +150,9 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
 
         // Add a marker in Sydney and move the camera
 
-        mMap.addMarker(new MarkerOptions().position(geofencePos).title("geofenceCenter"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(geofencePos));
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(12));
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(fenceLocation));
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -172,13 +176,13 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private void addGeofence(GoogleMap mMap) {
         mGeofence = new Geofence.Builder()
                 .setRequestId("1")
-                .setCircularRegion(geofencePos.latitude, geofencePos.longitude, 2000)
+                .setCircularRegion(fenceLocation.latitude, fenceLocation.longitude, radius)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .build();
         Circle circle = mMap.addCircle(new CircleOptions()
-                .center(geofencePos)
-                .radius(2000)
+                .center(fenceLocation)
+                .radius(radius)
                 .strokeColor(Color.BLUE)
                 .fillColor(Color.alpha(Color.BLUE)));
 
@@ -229,6 +233,19 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
                 }
             }
         };
+    }
+
+    private void getGeofence(){
+        String radiusString = getIntent().getStringExtra("RADIUS");
+        Log.d("SENGG", "About to send geofence");
+        if (radiusString != null) {
+            radius = Float.parseFloat(radiusString);
+            Log.d("SEND", "sent geofence");
+            float lat = Float.parseFloat(getIntent().getStringExtra("LAT"));
+            float lon = Float.parseFloat(getIntent().getStringExtra("LONG"));
+            fenceLocation = new LatLng(lat,lon);
+
+        }
     }
 
 
