@@ -3,9 +3,11 @@ package com.seng440.attend;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.location.Location;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.SeekBar;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -24,6 +26,9 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.messages.Message;
+import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import static android.graphics.Color.argb;
@@ -37,6 +42,11 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
     private SeekBar seekBar;
     private LatLng markerPos;
     private Circle circle;
+    private FloatingActionButton fab;
+    private Message mMessage;
+    private MessageListener mMessageListener;
+
+
 
 
     @Override
@@ -50,6 +60,22 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         seekBar=(SeekBar) findViewById(R.id.seekBar);
         radius = (float)seekBar.getProgress();
+        fab = findViewById(R.id.floatingActionButton);
+        mMessageListener = new MessageListener() {
+            @Override
+            public void onFound(Message message) {
+                Log.d("FOUND MESSAGE", "found");
+                Log.d("FOUND MESSAGE", "Found message: " + new String(message.getContent()));
+                String messageText = new String(message.getContent());
+
+            }
+
+            @Override
+            public void onLost(Message message) {
+                Log.d("LOST MESSAGE", "Lost sight of message: " + new String(message.getContent()));
+            }
+        };
+        floatingButtonListener();
 
     }
 
@@ -101,26 +127,10 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         setSeekBarListener(seekBar, mMap);
 
 
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+
     }
 
-    protected void startLocationUpdates(){
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(10*1000);
-        mLocationRequest.setFastestInterval(2000);
-
-        // Create LocationSettingsRequest object using location request
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-        LocationSettingsRequest locationSettingsRequest = builder.build();
-
-        // Check whether location settings are satisfied
-
-        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
-        settingsClient.checkLocationSettings(locationSettingsRequest);
-    }
 
     private void setMapLongClick(final GoogleMap map) {
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -160,6 +170,20 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
 
             }
         });
+    }
+
+    private void floatingButtonListener(){
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Nearby.getMessagesClient(getApplicationContext()).subscribe(mMessageListener);
+//
+//                Log.d("SENDING MES", "SENDING MESSAGE");
+//                mMessage = new Message(( String.valueOf(radius) + "," + String.valueOf(markerPos.latitude) + ","+ String.valueOf(markerPos.longitude)).getBytes());
+//                Nearby.getMessagesClient(getApplicationContext()).publish(mMessage);
+            }
+        });
+
     }
 
 }

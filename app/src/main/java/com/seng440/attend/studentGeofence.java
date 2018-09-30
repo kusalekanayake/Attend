@@ -13,6 +13,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -22,6 +24,7 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +33,9 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.nearby.Nearby;
+import com.google.android.gms.nearby.messages.Message;
+import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -47,16 +53,36 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private FusedLocationProviderClient mFusedLocaitonClient;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
+    private Circle posCircle;
+    private MessageListener mMessageListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFusedLocaitonClient = LocationServices.getFusedLocationProviderClient(this);
         setContentView(R.layout.activity_student_geofence);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mGeofencingClient = new GeofencingClient(this);
+
+        mMessageListener = new MessageListener() {
+            @Override
+            public void onFound(Message message) {
+                Log.d("FOUND MESSAGE", "found");
+                Log.d("FOUND MESSAGE", "Found message: " + new String(message.getContent()));
+                String messageText = new String(message.getContent());
+
+            }
+
+            @Override
+            public void onLost(Message message) {
+                Log.d("LOST MESSAGE", "Lost sight of message: " + new String(message.getContent()));
+            }
+        };
+        new android.os.Handler().postDelayed(
+                () -> lookForStudents(), 1500);
 
         mTeacherNav = (BottomNavigationView) findViewById(R.id.student_nav);
         mTeacherNav.setSelectedItemId(R.id.nav_student_map);
@@ -88,6 +114,12 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
                 }
             }
         });
+
+    }
+    private void lookForStudents() {
+        Log.d("LOST MESSAGE", "SUBSCRIBIng");
+
+        Nearby.getMessagesClient(getApplicationContext()).subscribe(mMessageListener);
     }
 
 
@@ -103,9 +135,14 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-//        createLocationRequest();
-//        createLocationCallback(mMap);
-//        startLocationUpdates();
+        posCircle = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(0,0))
+                .radius(50)
+                .strokeColor(Color.RED)
+                .fillColor(Color.RED));
+        createLocationRequest();
+        createLocationCallback(mMap);
+        startLocationUpdates();
 
         // Add a marker in Sydney and move the camera
 
@@ -136,7 +173,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
         mGeofence = new Geofence.Builder()
                 .setRequestId("1")
                 .setCircularRegion(geofencePos.latitude, geofencePos.longitude, 2000)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .build();
         Circle circle = mMap.addCircle(new CircleOptions()
@@ -152,7 +189,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private GeofencingRequest getGeofencingRequest() {
 
         return new GeofencingRequest.Builder()
-                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_EXIT)
                 .addGeofences(mGeofenceList)
                 .build();
     }
@@ -163,37 +200,36 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
         return mGeofencePendingIntent;
     }
 
-//    protected void createLocationRequest() {
-//        mLocationRequest = new LocationRequest();
-//        mLocationRequest.setInterval(5000);
-//        mLocationRequest.setFastestInterval(5000);
-//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//    }
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(500);
+        mLocationRequest.setFastestInterval(250);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
 
-//    private void startLocationUpdates() {
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//        mFusedLocaitonClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
-//    }
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
 
-//    private void createLocationCallback(final GoogleMap mMap){
-//        mLocationCallback = new LocationCallback() {
-//            @Override
-//            public void onLocationResult(LocationResult locationResult){
-//                if(locationResult ==null){
-//                    return;
-//                }
-//                for (Location location : locationResult.getLocations()){
-//                    Circle circle = mMap.addCircle(new CircleOptions()
-//                            .center(new LatLng(location.getLatitude(), location.getLongitude()))
-//                            .radius(1000)
-//                            .strokeColor(Color.RED)
-//                            .fillColor(Color.alpha(Color.RED)));
-//                }
-//            }
-//        };
-//    }
+        mFusedLocaitonClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+    }
+
+    private void createLocationCallback(final GoogleMap mMap){
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult){
+                if(locationResult ==null){
+                    return;
+                }
+                for (Location location : locationResult.getLocations()){
+
+                    posCircle.setCenter(new LatLng(location.getLatitude(), location.getLongitude()));
+
+                }
+            }
+        };
+    }
 
 
 

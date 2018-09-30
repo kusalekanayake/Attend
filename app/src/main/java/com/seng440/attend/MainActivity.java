@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermissions();
-        course = getIntent().getStringExtra("STUDENTS");
-        studentName = getIntent().getStringExtra("NAME");
+        //course = getIntent().getStringExtra("STUDENTS");
+       // studentName = getIntent().getStringExtra("NAME");
 
     }
 
