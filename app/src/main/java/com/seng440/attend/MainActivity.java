@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkStudentButton(android.view.View view) {
         Log.d("Test Student Button", "testing");
-        Intent i = new Intent(getApplicationContext(),TeacherAcitivity.class);
+        Intent i = new Intent(getApplicationContext(),NearbyActivity.class);
         String classText = ((TextView)findViewById(R.id.classText)).getText().toString();
         i.putExtra("CLASS", classText);
         String nameText = ((TextView)findViewById(R.id.nameText)).getText().toString();

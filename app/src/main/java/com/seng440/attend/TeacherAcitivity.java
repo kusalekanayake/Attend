@@ -13,18 +13,14 @@ public class TeacherAcitivity extends AppCompatActivity {
 
     private BottomNavigationView mTeacherNav;
     private FrameLayout mTeacherFrame;
-    private ClassesFragment classesFragment;
-    private RollFragment rollFragment;
-    private MapFragment mapFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_acitivity);
 
-        classesFragment = new ClassesFragment();
-        rollFragment = new RollFragment();
-        mapFragment= new MapFragment();
+
         mTeacherNav = (BottomNavigationView) findViewById(R.id.teacher_nav);
         mTeacherFrame = (FrameLayout) findViewById(R.id.teacher_frame);
         mTeacherNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -32,13 +28,10 @@ public class TeacherAcitivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.nav_classes:
-                        setFragment(classesFragment);
                         return true;
                     case R.id.nav_roll:
-                        setFragment(rollFragment);
                         return true;
                     case R.id.nav_map:
-                        setFragment(mapFragment);
                         return true;
                     default:
                         return false;

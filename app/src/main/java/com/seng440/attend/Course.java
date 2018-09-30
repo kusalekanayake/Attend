@@ -30,5 +30,9 @@ public class Course {
         return studentsString;
     }
 
+    public String getCourseName() {
+        return this.courseName;
+    }
+
 
 }
