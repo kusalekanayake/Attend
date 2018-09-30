@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_student_roll"
+        android:icon="@drawable/baseline_check_circle_outline_black_24dp"
+        android:title="@string/nav_roll" />
+    <item
+        android:id="@+id/nav_student_map"
+        android:icon="@drawable/baseline_track_changes_black_24dp"
+        android:title="@string/nav_map" />
+</menu>

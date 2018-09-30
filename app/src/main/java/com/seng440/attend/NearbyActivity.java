@@ -58,8 +58,8 @@ public class NearbyActivity extends AppCompatActivity {
         mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
 
-        mTeacherNav = (BottomNavigationView) findViewById(R.id.teacher_nav);
-        mTeacherNav.clearAnimation();
+        mTeacherNav = (BottomNavigationView) findViewById(R.id.student_nav);
+
 
         mTeacherNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             Intent i;
@@ -68,19 +68,10 @@ public class NearbyActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.nav_classes:
+                    case R.id.nav_student_roll:
                         return true;
-                    case R.id.nav_roll:
-                        i = new Intent(getApplicationContext(), ClassRollActivity.class);
-                        classText = "SENG440";
-                        i.putExtra("CLASS", classText);
-                        nameText = "Kusal";
-                        i.putExtra("NAME", nameText);
-                        finish();
-                        startActivity(i);
-                        return true;
-                    case R.id.nav_map:
-                        i = new Intent(getApplicationContext(), LocationActivity.class);
+                    case R.id.nav_student_map:
+                        i = new Intent(getApplicationContext(), studentGeofence.class);
                         classText = "HI there";
                         i.putExtra("CLASS", classText);
                         nameText = "hello";

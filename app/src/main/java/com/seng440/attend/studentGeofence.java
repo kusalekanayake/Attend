@@ -1,22 +1,21 @@
 package com.seng440.attend;
 
 import android.Manifest;
-import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
-import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.GeofencingRequest;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -28,12 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class studentGeofence extends FragmentActivity implements OnMapReadyCallback {
 
@@ -43,7 +37,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private LatLng geofencePos = new LatLng(-43.5226642, 172.5810532);
     private PendingIntent mGeofencePendingIntent;
     private ArrayList<Geofence> mGeofenceList = new ArrayList<>();
-
+    private BottomNavigationView mTeacherNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +49,38 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
         mapFragment.getMapAsync(this);
         mGeofencingClient = new GeofencingClient(this);
 
+        mTeacherNav = (BottomNavigationView) findViewById(R.id.student_nav);
+
+        mTeacherNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            Intent i;
+            String classText;
+            String nameText;
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_classes:
+                        return true;
+                    case R.id.nav_student_roll:
+                        i = new Intent(getApplicationContext(), NearbyActivity.class);
+                        classText = "SENG440";
+                        i.putExtra("CLASS", classText);
+                        nameText = "Kusal";
+                        i.putExtra("NAME", nameText);
+                        finish();
+                        startActivity(i);
+                        return true;
+                    case R.id.nav_student_map:
+
+                        return true;
+                    default:
+                        return false;
+
+                }
+            }
+        });
     }
+
+
 
 
     /**

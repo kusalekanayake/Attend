@@ -17,6 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
+
         <meta-data
             android:name="com.google.android.nearby.messages.API_KEY"
             android:value="AIzaSyAgJDXXcqzT6pcqC-T7EaXh7PikGWwQvNw" />
@@ -40,19 +43,13 @@
             android:label="@string/title_activity_nearby"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MapActivity"
-            android:label="@string/title_activity_map"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".MapsActivity2"
             android:label="@string/title_activity_maps2" />
         <activity
             android:name=".studentGeofence"
-            android:label="@string/title_activity_student_geofence">
-
-        </activity>
+            android:label="@string/title_activity_student_geofence" />
         <activity android:name=".ClassRollActivity" />
-        <activity android:name=".TeacherAcitivity" />
+        <activity android:name=".TeacherActivity" />
         <service android:name=".GeofenceTransitionsIntentService"/>
 
     </application>
