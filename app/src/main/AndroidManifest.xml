@@ -36,7 +36,8 @@
             android:name=".NearbyActivity"
             android:label="@string/title_activity_nearby"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ClassRollActivity"></activity>
+        <activity android:name=".ClassRollActivity" />
+        <activity android:name=".TeacherAcitivity"></activity>
     </application>
 
 </manifest>
