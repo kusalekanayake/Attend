@@ -1,5 +1,8 @@
 package com.seng440.attend;
 
+import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +33,14 @@ public class Course {
         return studentsString;
     }
 
+    public ArrayList<Student> getStudentArray() {
+        ArrayList<Student> studentArray = new ArrayList<>();
+        for (Student student: students.values()) {
+            studentArray.add(student);
+        }
+        return studentArray;
+    }
+
     public String getCourseName() {
         return this.courseName;
     }
@@ -40,6 +51,19 @@ public class Course {
             studentsString += student.getName() + "," + student.getId() + "\n";
         }
         return studentsString;
+    }
+
+    public void parseStudents(String input) {
+        if (input != null) {
+            String[] students = input.split("\n");
+            Log.d("STUDENTS", students.toString());
+            if (students.length > 1 || (students.length == 1 && students[0] != "")) {
+                for (String studentString : students) {
+                    String[] student = studentString.split(",");
+                    addStudent(new Student(student[0], student[1]));
+                }
+            }
+        }
     }
 
 
