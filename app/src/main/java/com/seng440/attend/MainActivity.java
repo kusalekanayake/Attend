@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(getApplicationContext(),NearbyActivity.class);
         String classText = ((TextView)findViewById(R.id.classText)).getText().toString();
         i.putExtra("CLASS", classText);
+
         String nameText = ((TextView)findViewById(R.id.nameText)).getText().toString();
         i.putExtra("NAME", nameText);
         startActivity(i);

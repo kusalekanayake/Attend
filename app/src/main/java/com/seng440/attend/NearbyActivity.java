@@ -18,12 +18,14 @@ import com.google.android.gms.nearby.messages.MessageListener;
 
 public class NearbyActivity extends AppCompatActivity {
 
-    int count = 0;
-    String androidId;
-    String nameText;
-    String classText;
-    Message mMessage;
-    MessageListener mMessageListener;
+    private int count = 0;
+    private String androidId;
+    private String nameText;
+    private String classText;
+    private Message mMessage;
+    private MessageListener mMessageListener;
+    private boolean loading = false;
+
 
     private BottomNavigationView mTeacherNav;
     @Override
@@ -31,12 +33,19 @@ public class NearbyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby);
         androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        ((TextView) findViewById(R.id.textView2)).setText(androidId);
+
         mMessageListener = new MessageListener() {
             @Override
             public void onFound(Message message) {
                 Log.d("FOUND MESSAGE", "Found message: " + new String(message.getContent()));
-                ((TextView)findViewById(R.id.textView2)).setText(new String(message.getContent()));
-                ((ImageView)findViewById(R.id.imageView2)).setImageResource(R.drawable.green);
+                String messageText = new String(message.getContent());
+                ((TextView) findViewById(R.id.textView2)).setText(new String(message.getContent()));
+                if (messageText.split(",")[0].equals(androidId)) {
+                    ((TextView) findViewById(R.id.textView3)).setText("Connected");
+                    ((ImageView) findViewById(R.id.imageView2)).setImageResource(R.drawable.green);
+                    loading = false;
+                }
             }
 
             @Override
@@ -101,29 +110,45 @@ public class NearbyActivity extends AppCompatActivity {
     }
 
 
-    public void startAdvertising(android.view.View view) {
-        ((TextView)findViewById(R.id.textView3)).setText("Advertising...");
-    }
-
-    public void startConnecting(android.view.View view) {
-        ((TextView)findViewById(R.id.textView3)).setText("Connecting...");
-        Nearby.getMessagesClient(this).subscribe(mMessageListener);
-        ((TextView)findViewById(R.id.textView3)).setText("Connected.");
-
-
-    }
-
     public void startSendingMessage(android.view.View view) {
-        ((TextView)findViewById(R.id.textView3)).setText("Sending message...");
+        ((ImageView)findViewById(R.id.imageView2)).setImageResource(R.drawable.loading);
+        Nearby.getMessagesClient(this).subscribe(mMessageListener);
         mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).publish(mMessage);
+        if (!loading) {
+            loading = true;
+            loadingSpinner(1);
+        }
+    }
 
+    private void loadingSpinner(int state) {
+        if (loading) {
+            switch (state) {
+                case 1:
+                    ((ImageView) findViewById(R.id.imageView2)).setImageResource(R.drawable.load1);
+                    new android.os.Handler().postDelayed(
+                            () -> loadingSpinner(2), 333);
+                    break;
+                case 2:
+                    ((ImageView) findViewById(R.id.imageView2)).setImageResource(R.drawable.load2);
+                    new android.os.Handler().postDelayed(
+                            () -> loadingSpinner(3), 333);
+                    break;
+                case 3:
+                    ((ImageView) findViewById(R.id.imageView2)).setImageResource(R.drawable.load3);
+                    new android.os.Handler().postDelayed(
+                            () -> loadingSpinner(1), 333);
+                    break;
+                default:
+                    ((ImageView) findViewById(R.id.imageView2)).setImageResource(R.drawable.load1);
+                    new android.os.Handler().postDelayed(
+                            () -> loadingSpinner(2), 333);
+                    break;
+            }
+        }
     }
 
 
-    public void setUpBottomNavigationView() {
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.teacher_nav);
-    }
 
 }

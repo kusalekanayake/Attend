@@ -1,6 +1,7 @@
 package com.seng440.attend;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -152,7 +153,15 @@ public class ClassRollActivity extends AppCompatActivity {
 
     public void exportClass(android.view.View view) {
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                "mailto","abc@mail.com", null));
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, "address");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, course.getStudents());
+        startActivity(Intent.createChooser(emailIntent, "Send Email..."));
 
     }
+
+
 
 }
