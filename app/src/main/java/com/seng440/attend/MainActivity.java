@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkTeacherButton(android.view.View view) {
         Intent i = new Intent(getApplicationContext(), ClassRollActivity.class);
+        i.putExtra("STUDENTS", course);
         String classText = ((TextView)findViewById(R.id.classText)).getText().toString();
         i.putExtra("CLASS", classText);
         String nameText = ((TextView)findViewById(R.id.nameText)).getText().toString();

@@ -25,6 +25,7 @@ public class LocationActivity extends AppCompatActivity {
     private TextView myLongitude;
     private LocationRequest mLocationRequest;
     private BottomNavigationView mTeacherNav;
+    private String course;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class LocationActivity extends AppCompatActivity {
         myLongitude = findViewById(R.id.LongitudeText);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        course = getIntent().getStringExtra("STUDENTS");
 
         mTeacherNav = (BottomNavigationView) findViewById(R.id.teacher_nav);
         mTeacherNav.setSelectedItemId(R.id.nav_map);
@@ -49,6 +51,7 @@ public class LocationActivity extends AppCompatActivity {
                     case R.id.nav_roll:
                         i = new Intent(getApplicationContext(), ClassRollActivity.class);
                         classText = "SENG440";
+                        i.putExtra("STUDENTS", course);
                         i.putExtra("CLASS", classText);
                         nameText = "Kusal";
                         i.putExtra("NAME", nameText);

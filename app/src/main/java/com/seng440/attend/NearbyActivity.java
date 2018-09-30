@@ -1,23 +1,32 @@
 package com.seng440.attend;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
+import com.google.android.gms.tasks.Task;
 
 
 public class NearbyActivity extends AppCompatActivity {
 
+    private int MY_PERMISSIONS_REQUEST_FINE_LOCATION;
     private int count = 0;
     private String androidId;
     private String nameText;
@@ -25,15 +34,32 @@ public class NearbyActivity extends AppCompatActivity {
     private Message mMessage;
     private MessageListener mMessageListener;
     private boolean loading = false;
-
+    private FusedLocationProviderClient mFusedLocationClient;
+    private String locationString = "";
+    private Task<Location> loco;
 
     private BottomNavigationView mTeacherNav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nearby);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+                }
+            }
+            return;
+        }
         androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         ((TextView) findViewById(R.id.textView2)).setText(androidId);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        loco = mFusedLocationClient.getLastLocation();
 
         mMessageListener = new MessageListener() {
             @Override
@@ -55,7 +81,7 @@ public class NearbyActivity extends AppCompatActivity {
         };
         nameText = getIntent().getStringExtra("NAME");
         classText = getIntent().getStringExtra("CLASS");
-        mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
+        mMessage = new Message((nameText.toString() + "," + classText.toString() + "," + count + "," + androidId.toString()).getBytes());
         count += 1;
 
         mTeacherNav = (BottomNavigationView) findViewById(R.id.student_nav);
@@ -65,6 +91,7 @@ public class NearbyActivity extends AppCompatActivity {
             Intent i;
             String classText;
             String nameText;
+
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
@@ -102,9 +129,13 @@ public class NearbyActivity extends AppCompatActivity {
 
 
     public void startSendingMessage(android.view.View view) {
+        Location lol = loco.getResult();
+        locationString = String.valueOf(lol.getLatitude()) + "," + String.valueOf(lol.getLongitude());
         ((ImageView)findViewById(R.id.imageView2)).setImageResource(R.drawable.loading);
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
-        mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
+        ((TextView) findViewById(R.id.textView2)).setText(locationString);
+
+        mMessage = new Message((nameText + "," + classText + ","+ count + "," + androidId + "," + locationString).getBytes());
         count += 1;
         Nearby.getMessagesClient(this).publish(mMessage);
         if (!loading) {
