@@ -82,5 +82,9 @@ public class LocationActivity extends AppCompatActivity {
         Intent i = new Intent(getApplicationContext(), MapsActivity2.class);
         startActivity(i);
     }
+    public void checkStudentButton(android.view.View view){
+        Intent i = new Intent(getApplicationContext(), studentGeofence.class);
+        startActivity(i);
+    }
 
 }

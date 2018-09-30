@@ -9,7 +9,9 @@ import android.util.Log;
 import android.widget.SeekBar;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
@@ -36,6 +38,7 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
     private LatLng markerPos;
     private Circle circle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,9 +50,6 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         seekBar=(SeekBar) findViewById(R.id.seekBar);
         radius = (float)seekBar.getProgress();
-
-
-
 
     }
 
@@ -99,9 +99,12 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
 
         setMapLongClick(mMap);
         setSeekBarListener(seekBar, mMap);
+
+
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
+
     protected void startLocationUpdates(){
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -114,12 +117,11 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         LocationSettingsRequest locationSettingsRequest = builder.build();
 
         // Check whether location settings are satisfied
-        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+
         SettingsClient settingsClient = LocationServices.getSettingsClient(this);
         settingsClient.checkLocationSettings(locationSettingsRequest);
-
-
     }
+
     private void setMapLongClick(final GoogleMap map) {
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
