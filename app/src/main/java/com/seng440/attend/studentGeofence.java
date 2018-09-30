@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,9 +14,14 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
+
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,6 +44,9 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private PendingIntent mGeofencePendingIntent;
     private ArrayList<Geofence> mGeofenceList = new ArrayList<>();
     private BottomNavigationView mTeacherNav;
+    private FusedLocationProviderClient mFusedLocaitonClient;
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +64,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
             Intent i;
             String classText;
             String nameText;
+
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
@@ -81,8 +91,6 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     }
 
 
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -95,6 +103,9 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+//        createLocationRequest();
+//        createLocationCallback(mMap);
+//        startLocationUpdates();
 
         // Add a marker in Sydney and move the camera
 
@@ -110,13 +121,13 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("ADDED GEOFENCE.......","ADDED THE GEOFENCE");
+                        Log.d("ADDED GEOFENCE.......", "ADDED THE GEOFENCE");
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("FAILED GEOFENCE.......","FAILED THE GEOFENCE");
+                Log.d("FAILED GEOFENCE.......", "FAILED THE GEOFENCE");
             }
         });
     }
@@ -124,7 +135,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private void addGeofence(GoogleMap mMap) {
         mGeofence = new Geofence.Builder()
                 .setRequestId("1")
-                .setCircularRegion(geofencePos.latitude,geofencePos.longitude,2000)
+                .setCircularRegion(geofencePos.latitude, geofencePos.longitude, 2000)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .build();
@@ -137,6 +148,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
         mGeofenceList.add(mGeofence);
 
     }
+
     private GeofencingRequest getGeofencingRequest() {
 
         return new GeofencingRequest.Builder()
@@ -150,6 +162,38 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
         mGeofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         return mGeofencePendingIntent;
     }
+
+//    protected void createLocationRequest() {
+//        mLocationRequest = new LocationRequest();
+//        mLocationRequest.setInterval(5000);
+//        mLocationRequest.setFastestInterval(5000);
+//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//    }
+
+//    private void startLocationUpdates() {
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//        mFusedLocaitonClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+//    }
+
+//    private void createLocationCallback(final GoogleMap mMap){
+//        mLocationCallback = new LocationCallback() {
+//            @Override
+//            public void onLocationResult(LocationResult locationResult){
+//                if(locationResult ==null){
+//                    return;
+//                }
+//                for (Location location : locationResult.getLocations()){
+//                    Circle circle = mMap.addCircle(new CircleOptions()
+//                            .center(new LatLng(location.getLatitude(), location.getLongitude()))
+//                            .radius(1000)
+//                            .strokeColor(Color.RED)
+//                            .fillColor(Color.alpha(Color.RED)));
+//                }
+//            }
+//        };
+//    }
 
 
 

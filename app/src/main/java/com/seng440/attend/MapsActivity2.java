@@ -162,9 +162,4 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         });
     }
 
-    private void updateCircle(final GoogleMap map){
-        circle.setRadius(radius);
-
-        map.addMarker(new MarkerOptions().position(markerPos));
-    }
 }
