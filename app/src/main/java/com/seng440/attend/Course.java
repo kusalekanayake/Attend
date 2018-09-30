@@ -34,5 +34,13 @@ public class Course {
         return this.courseName;
     }
 
+    public String toString() {
+        String studentsString = "";
+        for (Student student: students.values()) {
+            studentsString += student.getName() + "," + student.getId() + "\n";
+        }
+        return studentsString;
+    }
+
 
 }
