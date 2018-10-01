@@ -76,8 +76,8 @@ public class ClassRollActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.className)).setText(classText);
         courseString = getIntent().getStringExtra("STUDENTS");
         course.parseStudents(courseString);
-        reAddStudents();
         androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        ((TextView) findViewById(R.id.lastUpdateText)).setText("Looking for students...");
 
         mMessageListener = new MessageListener() {
             @Override
@@ -154,6 +154,8 @@ public class ClassRollActivity extends AppCompatActivity {
         idHeading.setMinHeight(15);
         headerRow.addView(idHeading);
         rollTable.addView(headerRow);
+        reAddStudents();
+
     }
 
 
@@ -195,11 +197,11 @@ public class ClassRollActivity extends AppCompatActivity {
         double lat = Double.parseDouble(locationString.split(",")[0]);
         double lon = Double.parseDouble(locationString.split(",")[1]);
         double distance = distance(lat, location.getLatitude(), lon, location.getLongitude());
-        ((TextView) findViewById(R.id.lastUpdateText)).setText(String.valueOf(distance));
+//        ((TextView) findViewById(R.id.lastUpdateText)).setText(String.valueOf(distance));
 
 
-        // If the student is nearby the teacher, a secondary check
-        if (distance < 300) {
+        // If the student is nearby the teacher, a secondary check, in metres
+        if (distance < 100) {
             if (replace) {
                 for (int i = 0, j = rollTable.getChildCount(); i < j; i++) {
                     View view = rollTable.getChildAt(i);

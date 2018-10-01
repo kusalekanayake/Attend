@@ -62,7 +62,7 @@ public class NearbyActivity extends AppCompatActivity {
             return;
         }
         androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        ((TextView) findViewById(R.id.textView2)).setText(androidId);
+//        ((TextView) findViewById(R.id.textView2)).setText(androidId);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         loco = mFusedLocationClient.getLastLocation();
         loggedIn = getIntent().getStringExtra("STATUS");
@@ -78,7 +78,7 @@ public class NearbyActivity extends AppCompatActivity {
             public void onFound(Message message) {
                 Log.d("FOUND MESSAGE", "Found message: " + new String(message.getContent()));
                 String messageText = new String(message.getContent());
-                ((TextView) findViewById(R.id.textView2)).setText(new String(message.getContent()));
+//                ((TextView) findViewById(R.id.textView2)).setText(new String(message.getContent()));
                 if (messageText.split(",")[0].equals(androidId)) {
                     ((TextView) findViewById(R.id.textView3)).setText("Connected");
                     ((ImageView) findViewById(R.id.imageView2)).setImageResource(R.drawable.green);
@@ -88,6 +88,8 @@ public class NearbyActivity extends AppCompatActivity {
                     radius = messageText.split(",")[1];
                     lat = messageText.split(",")[2];
                     lon = messageText.split(",")[3];
+                    ((TextView) findViewById(R.id.textView2)).setText("Geofence found, navigate to maps to see the boundary.");
+
 
 
                 }
@@ -138,8 +140,13 @@ public class NearbyActivity extends AppCompatActivity {
                 }
             }
         });
+        new android.os.Handler().postDelayed(
+                () -> lookForMessages(), 500);
     }
 
+    private void lookForMessages() {
+        Nearby.getMessagesClient(this).subscribe(mMessageListener);
+    }
 
     @Override
     public void onStart() {
@@ -148,8 +155,6 @@ public class NearbyActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        Nearby.getMessagesClient(this).unpublish(mMessage);
-        Nearby.getMessagesClient(this).unsubscribe(mMessageListener);
         super.onStop();
     }
 
@@ -158,7 +163,7 @@ public class NearbyActivity extends AppCompatActivity {
         Location lol = loco.getResult();
         locationString = String.valueOf(lol.getLatitude()) + "," + String.valueOf(lol.getLongitude());
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
-        ((TextView) findViewById(R.id.textView2)).setText(locationString);
+//        ((TextView) findViewById(R.id.textView2)).setText(locationString);
 
         mMessage = new Message((nameText + "," + classText + ","+ count + "," + androidId + "," + locationString).getBytes());
         count += 1;
@@ -217,6 +222,7 @@ public class NearbyActivity extends AppCompatActivity {
             radius = radiusString;
             lat = getIntent().getStringExtra("LAT");
             lon = getIntent().getStringExtra("LONG");
+            ((TextView) findViewById(R.id.textView2)).setText("Geofence found, navigate to maps to see the boundary.");
         }
     }
 

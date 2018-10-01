@@ -2,6 +2,7 @@ package com.seng440.attend;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 
