@@ -1,6 +1,7 @@
 package com.seng440.attend;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -10,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -42,7 +44,7 @@ public class NearbyActivity extends AppCompatActivity {
     private String radius;
     private String lat;
     private String lon;
-
+    private String loggedIn = "logged out";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +65,13 @@ public class NearbyActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.textView2)).setText(androidId);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         loco = mFusedLocationClient.getLastLocation();
+        loggedIn = getIntent().getStringExtra("STATUS");
+        if (loggedIn != null && loggedIn.equals("logged in")) {
+            ((TextView) findViewById(R.id.textView3)).setText("Connected");
+            ((ImageView) findViewById(R.id.imageView2)).setImageResource(R.drawable.green);
+        }
+        getGeofence();
+
 
         mMessageListener = new MessageListener() {
             @Override
@@ -73,6 +82,7 @@ public class NearbyActivity extends AppCompatActivity {
                 if (messageText.split(",")[0].equals(androidId)) {
                     ((TextView) findViewById(R.id.textView3)).setText("Connected");
                     ((ImageView) findViewById(R.id.imageView2)).setImageResource(R.drawable.green);
+                    loggedIn = "logged in";
                     loading = false;
                 } else if (messageText.split(",")[0].equals("GEOFENCE")) {
                     radius = messageText.split(",")[1];
@@ -113,6 +123,8 @@ public class NearbyActivity extends AppCompatActivity {
                                 i.putExtra("RADIUS", String.valueOf(radius));
                                 i.putExtra("LAT", String.valueOf(lat));
                                 i.putExtra("LONG", String.valueOf(lon));
+                                i.putExtra("STATUS", loggedIn);
+
                             }
                             finish();
                             startActivity(i);
@@ -157,6 +169,21 @@ public class NearbyActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit this session?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        NearbyActivity.this.finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+
     private void loadingSpinner(int state) {
         if (loading) {
             switch (state) {
@@ -184,6 +211,13 @@ public class NearbyActivity extends AppCompatActivity {
         }
     }
 
-
+    private void getGeofence(){
+        String radiusString = getIntent().getStringExtra("RADIUS");
+        if (radiusString != null) {
+            radius = radiusString;
+            lat = getIntent().getStringExtra("LAT");
+            lon = getIntent().getStringExtra("LONG");
+        }
+    }
 
 }

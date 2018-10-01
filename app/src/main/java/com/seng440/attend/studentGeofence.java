@@ -2,6 +2,7 @@ package com.seng440.attend;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -53,6 +55,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private MessageListener mMessageListener;
     private float radius;
     private LatLng fenceLocation;
+    private String loggedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mGeofencingClient = new GeofencingClient(this);
+        loggedIn = getIntent().getStringExtra("STATUS");
 
         mMessageListener = new MessageListener() {
             @Override
@@ -100,6 +104,10 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
                         i.putExtra("CLASS", classText);
                         nameText = "Kusal";
                         i.putExtra("NAME", nameText);
+                        i.putExtra("STATUS", loggedIn);
+                        i.putExtra("RADIUS", String.valueOf(radius));
+                        i.putExtra("LAT", String.valueOf(fenceLocation.latitude));
+                        i.putExtra("LONG", String.valueOf(fenceLocation.longitude));
                         finish();
                         startActivity(i);
                         return true;
@@ -120,6 +128,21 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
         Nearby.getMessagesClient(getApplicationContext()).subscribe(mMessageListener);
     }
 
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit this session?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        studentGeofence.this.finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
 
     /**
      * Manipulates the map once available.

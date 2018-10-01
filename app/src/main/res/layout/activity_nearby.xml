@@ -20,29 +20,22 @@
         android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/viewMapButton"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_marginBottom="68dp"
         android:onClick="startSendingMessage"
         android:text="Join Class"
         tools:layout_editor_absoluteX="278dp"
         tools:layout_editor_absoluteY="26dp" />
 
-    <Button
-        android:id="@+id/viewMapButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="67dp"
-        android:text="View Map" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="272dp"
+        android:layout_height="315dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="113dp"
+        android:layout_marginTop="119dp"
         app:srcCompat="@drawable/red" />
 
     <TextView

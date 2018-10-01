@@ -1,6 +1,7 @@
 package com.seng440.attend;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -9,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -103,6 +105,21 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         });
     }
 
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to exit this session?\nYou will lose track of your roll.")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        MapsActivity2.this.finish();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
 
     /**
      * Manipulates the map once available.
