@@ -49,7 +49,7 @@
             android:name=".studentGeofence"
             android:label="@string/title_activity_student_geofence" />
         <activity android:name=".ClassRollActivity" />
-        <activity android:name=".TeacherActivity" />
+
         <service android:name=".GeofenceTransitionsIntentService"/>
 
     </application>
