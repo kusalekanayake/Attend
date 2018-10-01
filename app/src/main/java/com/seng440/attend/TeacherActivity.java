@@ -27,8 +27,6 @@ public class TeacherActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.nav_classes:
-                        return true;
                     case R.id.nav_roll:
                         return true;
                     case R.id.nav_map:

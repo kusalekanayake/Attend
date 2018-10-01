@@ -107,15 +107,19 @@ public class NearbyActivity extends AppCompatActivity {
                     case R.id.nav_student_roll:
                         return true;
                     case R.id.nav_student_map:
-                        i = new Intent(getApplicationContext(), studentGeofence.class);
-                        if(radius != null) {
-                            i.putExtra("RADIUS", String.valueOf(radius));
-                            i.putExtra("LAT", String.valueOf(lat));
-                            i.putExtra("LONG", String.valueOf(lon));
+                        if (radius != null) {
+                            i = new Intent(getApplicationContext(), studentGeofence.class);
+                            if (radius != null) {
+                                i.putExtra("RADIUS", String.valueOf(radius));
+                                i.putExtra("LAT", String.valueOf(lat));
+                                i.putExtra("LONG", String.valueOf(lon));
+                            }
+                            finish();
+                            startActivity(i);
+                            return true;
+                        } else {
+                            return false;
                         }
-                        finish();
-                        startActivity(i);
-                        return true;
                     default:
                         return false;
 
@@ -141,7 +145,6 @@ public class NearbyActivity extends AppCompatActivity {
     public void startSendingMessage(android.view.View view) {
         Location lol = loco.getResult();
         locationString = String.valueOf(lol.getLatitude()) + "," + String.valueOf(lol.getLongitude());
-        ((ImageView)findViewById(R.id.imageView2)).setImageResource(R.drawable.loading);
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
         ((TextView) findViewById(R.id.textView2)).setText(locationString);
 

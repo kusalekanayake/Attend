@@ -11,9 +11,10 @@
 
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="509dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_marginBottom="58dp"
         tools:context=".MapsActivity2" />
 
     <SeekBar
@@ -29,14 +30,23 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="113dp"
 
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_gravity="end|bottom"
+        android:layout_marginBottom="74dp"
+        android:layout_marginEnd="19dp"
         android:clickable="true"
         app:srcCompat="@drawable/baseline_check_circle_outline_black_24dp" />
 
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/teacher_nav"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        app:menu="@menu/nav_items_teacher" />
 
 </RelativeLayout>
