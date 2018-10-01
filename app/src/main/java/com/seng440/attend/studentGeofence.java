@@ -13,9 +13,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
@@ -32,7 +29,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
@@ -99,8 +95,6 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.nav_classes:
-                        return true;
                     case R.id.nav_student_roll:
                         i = new Intent(getApplicationContext(), NearbyActivity.class);
                         classText = "SENG440";
@@ -142,7 +136,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
         mMap = googleMap;
         posCircle = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(0,0))
-                .radius(50)
+                .radius(10)
                 .strokeColor(Color.RED)
                 .fillColor(Color.RED));
         createLocationRequest();

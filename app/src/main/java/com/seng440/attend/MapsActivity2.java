@@ -4,22 +4,19 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -28,12 +25,9 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import static android.graphics.Color.argb;
 
 public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallback {
 
@@ -47,6 +41,10 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
     private FloatingActionButton fab;
     private Message mMessage;
     private MessageListener mMessageListener;
+    private String classText;
+    private String students;
+    private BottomNavigationView mTeacherNav;
+
 
 
 
@@ -55,6 +53,9 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps2);
+        classText = getIntent().getStringExtra("CLASS");
+        students = getIntent().getStringExtra("STUDENTS");
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -78,7 +79,28 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
             }
         };
         floatingButtonListener();
+        mTeacherNav = (BottomNavigationView) findViewById(R.id.teacher_nav);
+        mTeacherNav.setSelectedItemId(R.id.nav_map);
+        mTeacherNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            Intent i;
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.nav_roll:
+                        i = new Intent(getApplicationContext(), ClassRollActivity.class);
+                        i.putExtra("STUDENTS", students);
+                        i.putExtra("CLASS", classText);
+                        finish();
+                        startActivity(i);
+                        return true;
+                    case R.id.nav_map:
+                        return true;
+                    default:
+                        return false;
 
+                }
+            }
+        });
     }
 
 
@@ -183,6 +205,9 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
                 intent.putExtra("RADIUS", String.valueOf(radius));
                 intent.putExtra("LAT", String.valueOf(markerPos.latitude));
                 intent.putExtra("LONG", String.valueOf(markerPos.longitude));
+                intent.putExtra("CLASS", classText);
+                intent.putExtra("STUDENTS", students);
+
                 finish();
                 startActivity(intent);
 //                Nearby.getMessagesClient(getApplicationContext()).subscribe(mMessageListener);

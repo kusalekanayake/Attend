@@ -46,8 +46,6 @@ public class LocationActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.nav_classes:
-                        return true;
                     case R.id.nav_roll:
                         i = new Intent(getApplicationContext(), ClassRollActivity.class);
                         classText = "SENG440";

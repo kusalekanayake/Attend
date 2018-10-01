@@ -27,6 +27,7 @@ import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class ClassRollActivity extends AppCompatActivity {
@@ -50,7 +51,9 @@ public class ClassRollActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class_roll);
-        course = new Course("SENG440");
+        classText = getIntent().getStringExtra("CLASS");
+
+        course = new Course(classText);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -82,7 +85,10 @@ public class ClassRollActivity extends AppCompatActivity {
                 String student = messageString.split(",")[0];
                 String id = messageString.split(",")[3];
                 String locationString = messageString.split(",")[4] + ","  + messageString.split(",")[5];
-                addNewStudentToTable(student, id, locationString);
+                String className =  messageString.split(",")[1];
+//                if (className.toUpperCase().equals(classText.toUpperCase())) {
+                    addNewStudentToTable(student, id, locationString);
+//                }
 
             }
 
@@ -113,21 +119,10 @@ public class ClassRollActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
-                    case R.id.nav_classes:
-                        i = new Intent(getApplicationContext(), NearbyActivity.class);
-                        classText = "SENG440";
-                        i.putExtra("CLASS", classText);
-                        i.putExtra("STUDENTS", course.toString());
-                        nameText = "Kusal";
-                        i.putExtra("NAME", nameText);
-                        finish();
-                        startActivity(i);
-                        return true;
                     case R.id.nav_roll:
                         return true;
                     case R.id.nav_map:
-                        i = new Intent(getApplicationContext(), LocationActivity.class);
-                        classText = "HI there";
+                        i = new Intent(getApplicationContext(), MapsActivity2.class);
                         i.putExtra("STUDENTS", course.toString());
                         i.putExtra("CLASS", classText);
                         nameText = "hello";
@@ -145,6 +140,18 @@ public class ClassRollActivity extends AppCompatActivity {
         new android.os.Handler().postDelayed(
                 () -> lookForStudents(), 500);
         SendGeofence();
+        TableRow headerRow = new TableRow(this);
+
+        TextView nameHeading = new TextView(this);
+        nameHeading.setText("Name");
+        nameHeading.setMinWidth(400);
+
+        headerRow.addView(nameHeading);
+        TextView idHeading = new TextView(this);
+        idHeading.setText("Phone ID");
+        idHeading.setMinHeight(15);
+        headerRow.addView(idHeading);
+        rollTable.addView(headerRow);
     }
 
     private void reAddStudents() {
@@ -153,10 +160,14 @@ public class ClassRollActivity extends AppCompatActivity {
             TableRow newStudent = new TableRow(this);
             TextView studentName = new TextView(this);
             studentName.setText(student.getName());
+            studentName.setMinWidth(400);
+
             newStudent.addView(studentName);
-            TextView student_id = new TextView(this);
-            student_id.setText(student.getId());
-            newStudent.addView(student_id);
+            TextView studentId = new TextView(this);
+            studentId.setText(student.getId());
+            studentId.setMinHeight(15);
+
+            newStudent.addView(studentId);
             rollTable.addView(newStudent);
         }
     }
@@ -169,13 +180,13 @@ public class ClassRollActivity extends AppCompatActivity {
         double distance = distance(lat, location.getLatitude(), lon, location.getLongitude());
         ((TextView) findViewById(R.id.lastUpdateText)).setText(String.valueOf(distance));
 
+
+        // If the student is nearby the teacher, a secondary check
         if (distance < 300) {
             if (replace) {
                 for (int i = 0, j = rollTable.getChildCount(); i < j; i++) {
                     View view = rollTable.getChildAt(i);
                     if (view instanceof TableRow) {
-                        // then, you can remove the the row you want...
-                        // for instance...
                         TableRow row = (TableRow) view;
                         if (((TextView) row.getChildAt(1)).getText().toString().equals(id)) {
                             rollTable.removeViewAt(i);
@@ -188,10 +199,13 @@ public class ClassRollActivity extends AppCompatActivity {
             TableRow newStudent = new TableRow(this);
             TextView studentName = new TextView(this);
             studentName.setText(student);
+            studentName.setMinWidth(400);
+
             newStudent.addView(studentName);
-            TextView student_id = new TextView(this);
-            student_id.setText(id);
-            newStudent.addView(student_id);
+            TextView studentId = new TextView(this);
+            studentId.setText(id);
+            studentId.setMinHeight(15);
+            newStudent.addView(studentId);
             rollTable.addView(newStudent);
             respondToStudent(student, id);
         }
@@ -222,10 +236,15 @@ public class ClassRollActivity extends AppCompatActivity {
 
     public void exportClass(android.view.View view) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto","abc@mail.com", null));
+                "mailto","", null));
+        String emailContent = "Class: " + course.getCourseName() + "\nDate: ";
+        emailContent += Calendar.getInstance().getTime().toString() + "\n\nStudents:\n";
+        emailContent += course.getStudents();
+
+
         emailIntent.putExtra(Intent.EXTRA_EMAIL, "address");
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, course.getStudents());
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, course.getCourseName() + " roll for " + Calendar.getInstance().getTime().toString());
+        emailIntent.putExtra(Intent.EXTRA_TEXT, emailContent);
         startActivity(Intent.createChooser(emailIntent, "Send Email..."));
 
     }
