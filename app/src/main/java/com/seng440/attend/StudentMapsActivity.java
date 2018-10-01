@@ -63,7 +63,7 @@ public class StudentMapsActivity extends FragmentActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
 
         mFusedLocaitonClient = LocationServices.getFusedLocationProviderClient(this);
-        setContentView(R.layout.activity_student_geofence);
+        setContentView(R.layout.activity_student_maps);
         getGeofence();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

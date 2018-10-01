@@ -54,7 +54,7 @@ public class TeacherMapsActivity extends FragmentActivity implements OnMapReadyC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps2);
+        setContentView(R.layout.activity_teacher_maps);
         classText = getIntent().getStringExtra("CLASS");
         students = getIntent().getStringExtra("STUDENTS");
 

@@ -38,11 +38,6 @@
         </activity>
         <activity
             android:screenOrientation="portrait"
-            android:name=".LocationActivity"
-            android:label="@string/title_activity_location"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:screenOrientation="portrait"
             android:name=".MainStudentActivity"
             android:label="@string/title_activity_nearby"
             android:theme="@style/AppTheme.NoActionBar" />

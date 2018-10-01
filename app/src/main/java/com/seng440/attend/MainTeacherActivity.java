@@ -54,7 +54,7 @@ public class MainTeacherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_class_roll);
+        setContentView(R.layout.activity_main_teacher);
         classText = getIntent().getStringExtra("CLASS");
 
         course = new Course(classText);
