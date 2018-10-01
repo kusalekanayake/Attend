@@ -46,7 +46,7 @@ public class ClassRollActivity extends AppCompatActivity {
     private BottomNavigationView mTeacherNav;
     private TableLayout rollTable;
     private FusedLocationProviderClient mFusedLocationClient;
-    private Task<Location> loco;
+    private Task<Location> locationTask;
 
 
     @Override
@@ -70,7 +70,7 @@ public class ClassRollActivity extends AppCompatActivity {
             return;
         }
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        loco = mFusedLocationClient.getLastLocation();
+        locationTask = mFusedLocationClient.getLastLocation();
         rollTable = (TableLayout) findViewById(R.id.rollTable);
         classText = getIntent().getStringExtra("CLASS");
         ((TextView)findViewById(R.id.className)).setText(classText);
@@ -192,16 +192,15 @@ public class ClassRollActivity extends AppCompatActivity {
     }
 
     private void addNewStudentToTable(String student, String id, String locationString) {
+        Location location = locationTask.getResult();
         boolean replace = course.addStudent(new Student(student, id));
-        Location location = loco.getResult();
         double lat = Double.parseDouble(locationString.split(",")[0]);
         double lon = Double.parseDouble(locationString.split(",")[1]);
         double distance = distance(lat, location.getLatitude(), lon, location.getLongitude());
-//        ((TextView) findViewById(R.id.lastUpdateText)).setText(String.valueOf(distance));
-
+        int maximumDistance = 50;
 
         // If the student is nearby the teacher, a secondary check, in metres
-        if (distance < 100) {
+        if (distance < maximumDistance) {
             if (replace) {
                 for (int i = 0, j = rollTable.getChildCount(); i < j; i++) {
                     View view = rollTable.getChildAt(i);
