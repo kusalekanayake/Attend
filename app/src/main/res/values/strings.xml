@@ -7,4 +7,5 @@
     <string name="nav_roll">Roll</string>
     <string name="title_activity_maps2">Map</string>
     <string name="title_activity_student_geofence">Map</string>
+    <string name="channel_description">You have left the boundary</string>
 </resources>
