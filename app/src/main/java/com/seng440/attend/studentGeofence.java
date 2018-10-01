@@ -2,7 +2,6 @@ package com.seng440.attend;
 
 import android.Manifest;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -44,7 +42,6 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private GoogleMap mMap;
     private GeofencingClient mGeofencingClient;
     private Geofence mGeofence;
-    private LatLng geofencePos = new LatLng(-43.5226642, 172.5810532);
     private PendingIntent mGeofencePendingIntent;
     private ArrayList<Geofence> mGeofenceList = new ArrayList<>();
     private BottomNavigationView mTeacherNav;
@@ -55,6 +52,8 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private MessageListener mMessageListener;
     private float radius;
     private LatLng fenceLocation;
+    private LatLng testFence = new LatLng(-43.5226642, 172.5810532);
+    private LatLng testRadius;
     private String loggedIn;
 
     @Override
@@ -191,6 +190,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     }
 
     private void addGeofence(GoogleMap mMap) {
+
         mGeofence = new Geofence.Builder()
                 .setRequestId("1")
                 .setCircularRegion(fenceLocation.latitude, fenceLocation.longitude, radius)
@@ -255,14 +255,21 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
     private void getGeofence(){
         String radiusString = getIntent().getStringExtra("RADIUS");
         Log.d("SENGG", "About to send geofence");
+        double lat;
+        double lon;
         if (radiusString != null) {
             radius = Float.parseFloat(radiusString);
             Log.d("SEND", "sent geofence");
-            float lat = Float.parseFloat(getIntent().getStringExtra("LAT"));
-            float lon = Float.parseFloat(getIntent().getStringExtra("LONG"));
-            fenceLocation = new LatLng(lat,lon);
+            lat = Double.parseDouble(getIntent().getStringExtra("LAT"));
+            lon = Double.parseDouble(getIntent().getStringExtra("LONG"));
 
+
+        }else{
+            radius = 1000;
+            lat = testFence.latitude;
+            lon = testFence.longitude;
         }
+        fenceLocation = new LatLng(lat,lon);
     }
 
 
