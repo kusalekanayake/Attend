@@ -39,7 +39,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
-public class studentGeofence extends FragmentActivity implements OnMapReadyCallback {
+public class StudentMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private GeofencingClient mGeofencingClient;
@@ -100,7 +100,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.nav_student_roll:
-                        i = new Intent(getApplicationContext(), NearbyActivity.class);
+                        i = new Intent(getApplicationContext(), MainStudentActivity.class);
                         classText = "SENG440";
                         i.putExtra("CLASS", classText);
                         nameText = "Kusal";
@@ -138,7 +138,7 @@ public class studentGeofence extends FragmentActivity implements OnMapReadyCallb
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        studentGeofence.this.finish();
+                        StudentMapsActivity.this.finish();
                     }
                 })
                 .setNegativeButton("No", null)

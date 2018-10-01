@@ -31,7 +31,7 @@ import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallback {
+public class TeacherMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -89,7 +89,7 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.nav_roll:
-                        i = new Intent(getApplicationContext(), ClassRollActivity.class);
+                        i = new Intent(getApplicationContext(), MainTeacherActivity.class);
                         i.putExtra("STUDENTS", students);
                         i.putExtra("CLASS", classText);
                         finish();
@@ -114,7 +114,7 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        MapsActivity2.this.finish();
+                        TeacherMapsActivity.this.finish();
                     }
                 })
                 .setNegativeButton("No", null)
@@ -217,7 +217,7 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),ClassRollActivity.class);
+                Intent intent = new Intent(getApplicationContext(),MainTeacherActivity.class);
 
                 intent.putExtra("RADIUS", String.valueOf(radius));
                 intent.putExtra("LAT", String.valueOf(markerPos.latitude));

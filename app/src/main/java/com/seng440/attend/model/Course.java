@@ -1,4 +1,4 @@
-package com.seng440.attend;
+package com.seng440.attend.model;
 
 import android.util.Log;
 
@@ -11,7 +11,7 @@ public class Course {
     private String courseName;
     private Map<String, Student> students;
 
-    Course(String courseName) {
+    public Course(String courseName) {
         this.courseName = courseName;
         students = new HashMap<>();
     }

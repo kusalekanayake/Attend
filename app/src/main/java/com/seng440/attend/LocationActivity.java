@@ -47,7 +47,7 @@ public class LocationActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.nav_roll:
-                        i = new Intent(getApplicationContext(), ClassRollActivity.class);
+                        i = new Intent(getApplicationContext(), MainTeacherActivity.class);
                         classText = "SENG440";
                         i.putExtra("STUDENTS", course);
                         i.putExtra("CLASS", classText);
@@ -107,11 +107,11 @@ public class LocationActivity extends AppCompatActivity {
                 });
     }
     public void checkMapButton(android.view.View view) {
-        Intent i = new Intent(getApplicationContext(), MapsActivity2.class);
+        Intent i = new Intent(getApplicationContext(), TeacherMapsActivity.class);
         startActivity(i);
     }
     public void checkStudentButton(android.view.View view){
-        Intent i = new Intent(getApplicationContext(), studentGeofence.class);
+        Intent i = new Intent(getApplicationContext(), StudentMapsActivity.class);
         startActivity(i);
     }
 

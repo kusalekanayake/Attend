@@ -26,7 +26,7 @@ import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.tasks.Task;
 
 
-public class NearbyActivity extends AppCompatActivity {
+public class MainStudentActivity extends AppCompatActivity {
 
     private int MY_PERMISSIONS_REQUEST_FINE_LOCATION;
     private int count = 0;
@@ -120,7 +120,7 @@ public class NearbyActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_student_map:
                         if (radius != null) {
-                            i = new Intent(getApplicationContext(), studentGeofence.class);
+                            i = new Intent(getApplicationContext(), StudentMapsActivity.class);
                             if (radius != null) {
                                 i.putExtra("RADIUS", String.valueOf(radius));
                                 i.putExtra("LAT", String.valueOf(lat));
@@ -181,7 +181,7 @@ public class NearbyActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        NearbyActivity.this.finish();
+                        MainStudentActivity.this.finish();
                     }
                 })
                 .setNegativeButton("No", null)

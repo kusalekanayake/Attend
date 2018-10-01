@@ -43,20 +43,20 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:screenOrientation="portrait"
-            android:name=".NearbyActivity"
+            android:name=".MainStudentActivity"
             android:label="@string/title_activity_nearby"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:screenOrientation="portrait"
-            android:name=".MapsActivity2"
+            android:name=".TeacherMapsActivity"
             android:label="@string/title_activity_maps2" />
         <activity
             android:screenOrientation="portrait"
-            android:name=".studentGeofence"
+            android:name=".StudentMapsActivity"
             android:label="@string/title_activity_student_geofence" />
         <activity
             android:screenOrientation="portrait"
-            android:name=".ClassRollActivity" />
+            android:name=".MainTeacherActivity" />
 
         <service android:name=".GeofenceTransitionsIntentService"/>
 

@@ -27,12 +27,14 @@ import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.messages.Message;
 import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.tasks.Task;
+import com.seng440.attend.model.Course;
+import com.seng440.attend.model.Student;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class ClassRollActivity extends AppCompatActivity {
+public class MainTeacherActivity extends AppCompatActivity {
 
     private int MY_PERMISSIONS_REQUEST_FINE_LOCATION;
     private int count = 0;
@@ -124,7 +126,7 @@ public class ClassRollActivity extends AppCompatActivity {
                     case R.id.nav_roll:
                         return true;
                     case R.id.nav_map:
-                        i = new Intent(getApplicationContext(), MapsActivity2.class);
+                        i = new Intent(getApplicationContext(), TeacherMapsActivity.class);
                         i.putExtra("STUDENTS", course.toString());
                         i.putExtra("CLASS", classText);
                         nameText = "hello";
@@ -166,7 +168,7 @@ public class ClassRollActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        ClassRollActivity.this.finish();
+                        MainTeacherActivity.this.finish();
                     }
                 })
                 .setNegativeButton("No", null)
@@ -252,19 +254,18 @@ public class ClassRollActivity extends AppCompatActivity {
         SendGeofence();
     }
 
-    public void exportClass(android.view.View view) {
+    public void exportClassEmail(android.view.View view) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
                 "mailto","", null));
-        String emailContent = "Class: " + course.getCourseName() + "\nDate: ";
-        emailContent += Calendar.getInstance().getTime().toString() + "\n\nStudents:\n";
-        emailContent += course.getStudents();
-
-
+        String emailContent = "Class: " + course.getCourseName() + "\nDate: "
+                + Calendar.getInstance().getTime().toString() + "\n\nStudents:\n"
+                    + course.getStudents();
         emailIntent.putExtra(Intent.EXTRA_EMAIL, "address");
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, course.getCourseName() + " roll for " + Calendar.getInstance().getTime().toString());
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, course.getCourseName()
+                + " roll for " + Calendar.getInstance().getTime().toString());
         emailIntent.putExtra(Intent.EXTRA_TEXT, emailContent);
-        startActivity(Intent.createChooser(emailIntent, "Send Email..."));
 
+        startActivity(Intent.createChooser(emailIntent, "Send Email..."));
     }
 
     /**

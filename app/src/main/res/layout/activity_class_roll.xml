@@ -5,7 +5,7 @@
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ClassRollActivity">
+    tools:context=".MainTeacherActivity">
 
     <TextView
         android:id="@+id/lastUpdateText"
@@ -24,7 +24,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="68dp"
-        android:onClick="exportClass"
+        android:onClick="exportClassEmail"
         android:text="Export" />
 
     <TextView

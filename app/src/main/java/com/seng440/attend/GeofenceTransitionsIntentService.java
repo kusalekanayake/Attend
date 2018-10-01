@@ -5,9 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
@@ -18,11 +16,9 @@ import com.google.android.gms.location.GeofencingEvent;
 public class GeofenceTransitionsIntentService extends IntentService{
     public String CHANNEL_ID = "Default";
 
-
     public GeofenceTransitionsIntentService() {
         super("GeofenceTransitionService");
     }
-
 
     @Override
     public void onCreate(){

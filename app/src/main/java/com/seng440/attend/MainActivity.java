@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkStudentButton(android.view.View view) {
         Log.d("Test Student Button", "testing");
-        Intent i = new Intent(getApplicationContext(),NearbyActivity.class);
+        Intent i = new Intent(getApplicationContext(),MainStudentActivity.class);
         String classText = ((TextView)findViewById(R.id.classText)).getText().toString();
         i.putExtra("CLASS", classText);
 
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkTeacherButton(android.view.View view) {
-        Intent i = new Intent(getApplicationContext(), ClassRollActivity.class);
+        Intent i = new Intent(getApplicationContext(), MainTeacherActivity.class);
         i.putExtra("STUDENTS", course);
         String classText = ((TextView)findViewById(R.id.classText)).getText().toString();
         i.putExtra("CLASS", classText);
