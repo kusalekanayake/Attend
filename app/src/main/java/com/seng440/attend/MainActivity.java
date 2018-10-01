@@ -27,9 +27,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkPermissions();
-        //course = getIntent().getStringExtra("STUDENTS");
-       // studentName = getIntent().getStringExtra("NAME");
-
     }
 
 
@@ -51,19 +48,11 @@ public class MainActivity extends AppCompatActivity {
         String classText = ((TextView)findViewById(R.id.classText)).getText().toString();
         i.putExtra("CLASS", classText);
         String nameText = ((TextView)findViewById(R.id.nameText)).getText().toString();
+        i.putExtra("NAME", nameText);
         startActivity(i);
     }
 
     private void checkPermissions() {
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
-//                        ActivityCompat.requestPermissions(this,
-//                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-//                                MY_PERMISSIONS_REQUEST_COARSE_LOCATION);
-//                    }
-//        }
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             if (!ActivityCompat.shouldShowRequestPermissionRationale(this,

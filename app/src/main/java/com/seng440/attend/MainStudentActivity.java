@@ -1,7 +1,6 @@
 package com.seng440.attend;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -36,11 +35,8 @@ public class MainStudentActivity extends AppCompatActivity {
     private Message mMessage;
     private MessageListener mMessageListener;
     private boolean loading = false;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private String locationString = "";
-    private Task<Location> loco;
+    private Task<Location> locationTask;
 
-    private BottomNavigationView mTeacherNav;
     private String radius;
     private String lat;
     private String lon;
@@ -62,9 +58,8 @@ public class MainStudentActivity extends AppCompatActivity {
             return;
         }
         androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-//        ((TextView) findViewById(R.id.textView2)).setText(androidId);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        loco = mFusedLocationClient.getLastLocation();
+        FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        locationTask = mFusedLocationClient.getLastLocation();
         loggedIn = getIntent().getStringExtra("STATUS");
         if (loggedIn != null && loggedIn.equals("logged in")) {
             ((TextView) findViewById(R.id.textView3)).setText("Connected");
@@ -78,7 +73,6 @@ public class MainStudentActivity extends AppCompatActivity {
             public void onFound(Message message) {
                 Log.d("FOUND MESSAGE", "Found message: " + new String(message.getContent()));
                 String messageText = new String(message.getContent());
-//                ((TextView) findViewById(R.id.textView2)).setText(new String(message.getContent()));
                 if (messageText.split(",")[0].equals(androidId)) {
                     ((TextView) findViewById(R.id.textView3)).setText("Connected");
                     ((ImageView) findViewById(R.id.imageView2)).setImageResource(R.drawable.green);
@@ -89,9 +83,6 @@ public class MainStudentActivity extends AppCompatActivity {
                     lat = messageText.split(",")[2];
                     lon = messageText.split(",")[3];
                     ((TextView) findViewById(R.id.textView2)).setText("Geofence found, navigate to maps to see the boundary.");
-
-
-
                 }
             }
 
@@ -105,14 +96,11 @@ public class MainStudentActivity extends AppCompatActivity {
         mMessage = new Message((nameText.toString() + "," + classText.toString() + "," + count + "," + androidId.toString()).getBytes());
         count += 1;
 
-        mTeacherNav = (BottomNavigationView) findViewById(R.id.student_nav);
+        BottomNavigationView mTeacherNav = findViewById(R.id.student_nav);
 
 
         mTeacherNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            Intent i;
-            String classText;
-            String nameText;
-
+            Intent intent;
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
@@ -120,16 +108,16 @@ public class MainStudentActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_student_map:
                         if (radius != null) {
-                            i = new Intent(getApplicationContext(), StudentMapsActivity.class);
+                            intent = new Intent(getApplicationContext(), StudentMapsActivity.class);
                             if (radius != null) {
-                                i.putExtra("RADIUS", String.valueOf(radius));
-                                i.putExtra("LAT", String.valueOf(lat));
-                                i.putExtra("LONG", String.valueOf(lon));
-                                i.putExtra("STATUS", loggedIn);
+                                intent.putExtra("RADIUS", String.valueOf(radius));
+                                intent.putExtra("LAT", String.valueOf(lat));
+                                intent.putExtra("LONG", String.valueOf(lon));
+                                intent.putExtra("STATUS", loggedIn);
 
                             }
                             finish();
-                            startActivity(i);
+                            startActivity(intent);
                             return true;
                         } else {
                             return false;
@@ -160,10 +148,9 @@ public class MainStudentActivity extends AppCompatActivity {
 
 
     public void startSendingMessage(android.view.View view) {
-        Location lol = loco.getResult();
-        locationString = String.valueOf(lol.getLatitude()) + "," + String.valueOf(lol.getLongitude());
+        Location lol = locationTask.getResult();
+        String locationString = String.valueOf(lol.getLatitude()) + "," + String.valueOf(lol.getLongitude());
         Nearby.getMessagesClient(this).subscribe(mMessageListener);
-//        ((TextView) findViewById(R.id.textView2)).setText(locationString);
 
         mMessage = new Message((nameText + "," + classText + ","+ count + "," + androidId + "," + locationString).getBytes());
         count += 1;
@@ -179,11 +166,7 @@ public class MainStudentActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setMessage("Are you sure you want to exit this session?")
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        MainStudentActivity.this.finish();
-                    }
-                })
+                .setPositiveButton("Yes", (dialog, id) -> MainStudentActivity.this.finish())
                 .setNegativeButton("No", null)
                 .show();
     }

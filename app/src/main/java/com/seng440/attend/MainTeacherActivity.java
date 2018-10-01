@@ -1,7 +1,6 @@
 package com.seng440.attend;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -73,7 +72,7 @@ public class MainTeacherActivity extends AppCompatActivity {
         }
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         locationTask = mFusedLocationClient.getLastLocation();
-        rollTable = (TableLayout) findViewById(R.id.rollTable);
+        rollTable = findViewById(R.id.rollTable);
         classText = getIntent().getStringExtra("CLASS");
         ((TextView)findViewById(R.id.className)).setText(classText);
         courseString = getIntent().getStringExtra("STUDENTS");
@@ -113,7 +112,7 @@ public class MainTeacherActivity extends AppCompatActivity {
         mMessage = new Message((nameText.toString() + "," + classText.toString() + ","+ count + "," + androidId.toString()).getBytes());
         count += 1;
 
-        mTeacherNav = (BottomNavigationView) findViewById(R.id.teacher_nav);
+        mTeacherNav = findViewById(R.id.teacher_nav);
         mTeacherNav.setSelectedItemId(R.id.nav_roll);
         mTeacherNav.clearAnimation();
         mTeacherNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -129,7 +128,6 @@ public class MainTeacherActivity extends AppCompatActivity {
                         i = new Intent(getApplicationContext(), TeacherMapsActivity.class);
                         i.putExtra("STUDENTS", course.toString());
                         i.putExtra("CLASS", classText);
-                        nameText = "hello";
                         i.putExtra("NAME", nameText);
                         finish();
                         startActivity(i);
@@ -166,11 +164,7 @@ public class MainTeacherActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setMessage("Are you sure you want to exit this session?\nYou will lose track of your roll.")
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        MainTeacherActivity.this.finish();
-                    }
-                })
+                .setPositiveButton("Yes", (dialog, id) -> MainTeacherActivity.this.finish())
                 .setNegativeButton("No", null)
                 .show();
     }

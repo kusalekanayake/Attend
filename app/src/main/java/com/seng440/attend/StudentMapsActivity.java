@@ -2,7 +2,6 @@ package com.seng440.attend;
 
 import android.Manifest;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -31,11 +30,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.nearby.Nearby;
-import com.google.android.gms.nearby.messages.Message;
-import com.google.android.gms.nearby.messages.MessageListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
@@ -51,7 +46,6 @@ public class StudentMapsActivity extends FragmentActivity implements OnMapReadyC
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
     private Circle posCircle;
-    private MessageListener mMessageListener;
     private float radius;
     private LatLng fenceLocation;
     private LatLng testFence = new LatLng(-43.5226642, 172.5810532);
@@ -71,25 +65,7 @@ public class StudentMapsActivity extends FragmentActivity implements OnMapReadyC
         mapFragment.getMapAsync(this);
         mGeofencingClient = new GeofencingClient(this);
         loggedIn = getIntent().getStringExtra("STATUS");
-
-        mMessageListener = new MessageListener() {
-            @Override
-            public void onFound(Message message) {
-                Log.d("FOUND MESSAGE", "found");
-                Log.d("FOUND MESSAGE", "Found message: " + new String(message.getContent()));
-                String messageText = new String(message.getContent());
-
-            }
-
-            @Override
-            public void onLost(Message message) {
-                Log.d("LOST MESSAGE", "Lost sight of message: " + new String(message.getContent()));
-            }
-        };
-        new android.os.Handler().postDelayed(
-                () -> lookForStudents(), 1500);
-
-        mTeacherNav = (BottomNavigationView) findViewById(R.id.student_nav);
+        mTeacherNav = findViewById(R.id.student_nav);
         mTeacherNav.setSelectedItemId(R.id.nav_student_map);
         mTeacherNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             Intent i;
@@ -123,12 +99,6 @@ public class StudentMapsActivity extends FragmentActivity implements OnMapReadyC
         });
 
     }
-    private void lookForStudents() {
-        Log.d("LOST MESSAGE", "SUBSCRIBIng");
-
-        Nearby.getMessagesClient(getApplicationContext()).subscribe(mMessageListener);
-    }
-
 
 
     @Override
@@ -136,11 +106,7 @@ public class StudentMapsActivity extends FragmentActivity implements OnMapReadyC
         new AlertDialog.Builder(this)
                 .setMessage("Are you sure you want to exit this session?")
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        StudentMapsActivity.this.finish();
-                    }
-                })
+                .setPositiveButton("Yes", (dialog, id) -> StudentMapsActivity.this.finish())
                 .setNegativeButton("No", null)
                 .show();
     }
@@ -177,13 +143,7 @@ public class StudentMapsActivity extends FragmentActivity implements OnMapReadyC
         }
         addGeofence(mMap);
         mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("ADDED GEOFENCE.......", "ADDED THE GEOFENCE");
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+                .addOnSuccessListener(aVoid -> Log.d("ADDED GEOFENCE.......", "ADDED THE GEOFENCE")).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("FAILED GEOFENCE.......", "FAILED THE GEOFENCE");
