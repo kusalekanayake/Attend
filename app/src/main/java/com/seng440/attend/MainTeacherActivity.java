@@ -117,8 +117,6 @@ public class MainTeacherActivity extends AppCompatActivity {
         mTeacherNav.clearAnimation();
         mTeacherNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             Intent i;
-            String classText;
-            String nameText;
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
@@ -233,6 +231,7 @@ public class MainTeacherActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
     }
+
 
     @Override
     public void onStop() {
